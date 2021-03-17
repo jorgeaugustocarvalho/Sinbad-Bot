@@ -84,7 +84,7 @@ async def adivinha(x, numero: int):
     """Adivinhe o numero de 1 a 6"""
     valor = random.randint(1, 6)
     if numero == valor:
-        await x.send("Acertou, vc é pika")
+        await x.send("Acertou")
     else:
         await x.send("Errou")
 
