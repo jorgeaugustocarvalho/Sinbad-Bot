@@ -88,4 +88,160 @@ async def adivinha(x, numero: int):
     else:
         await x.send("Errou")
 
+#jogo da velha para o bot
+
+jogador1 = ""
+jogador2 = ""
+turno = ""
+gameOver = True
+
+condVitoria = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+]
+
+@client.command()
+async def velhinha(x, p1 : discord.Member, p2 : discord.Member):
+
+    await x.send('''Bem-vindos ao duelo de djinns do jogo da velha!! Aqui está um pequeno tutorial pra que este duelo seja realizado:
+    
+    Primeiramente, olhe para as letras q/ w/ e/ a/ s/ d/ z/ x/ c. Notou algo interessante? Elas foram setadas como botões para esse jogo para que vc consiga visualizar melhor o tabuleiro no seu teclado! insira uma dessas letras que será referente a sua posição no tabuleiro!!!
+
+    Para realizar uma ação no seu turno, utilize o comando $jogar. Por exemplo, ao digitar:
+
+        $jogar s
+    
+        A jogada se dará na seguinte posição do tabuleiro:
+
+        :white_large_square: :white_large_square: :white_large_square:
+
+        :white_large_square: :regional_indicator_x: :white_large_square:
+
+        :white_large_square: :white_large_square: :white_large_square:
+        
+       
+        Bora jogar???''')
+
+    global jogador1
+    global jogador2
+    global turno
+    global gameOver
+    global count
+
+    if gameOver:
+        global board
+        board = [':black_large_square:', ':black_large_square:', ':black_large_square:',
+                 ':black_large_square:', ':black_large_square:', ':black_large_square:',
+                 ':black_large_square:', ':black_large_square:', ':black_large_square:']
+        turno = ""
+        gameOver = False
+        count = 0
+
+        jogador1 = p1
+        jogador2 = p2
+
+        #printando o tabuleiro
+        linha = ""
+        for i in range(len(board)):
+            if i == 2 or i == 5 or i == 8:
+                linha +=  " " + board[i]
+                await x.send(linha)
+                linha = ""
+            else:
+                linha += " " + board[i]
+
+        #determinando turno
+
+        num = random.randint(1, 2)
+        if num == 1:
+            turno = jogador1
+            await x.send(f"É a vez de <@{str(jogador1.id)}>!!")
+        elif num == 2:
+            turno = jogador2
+            await x.send(f"É a vez de <@{str(jogador2.id)}>!!")
+    
+    else:
+        await x.send("Um jogo está rolando amigo, acabe primeiro para jogar outro :smile:")
+
+@client.command()
+async def jogar(x, pos):
+    global turno
+    global jogador1
+    global jogador2
+    global board
+    global count
+    global gameOver
+
+    letras = ['237375428518523125738', 'q', 'w', 'e', 'a', 's', 'd', 'z', 'x', 'c']
+    
+    if gameOver == False:
+        mark = ""
+        if turno == x.author:
+            if turno == jogador1:
+                mark = ":regional_indicator_x:"
+            elif turno == jogador2:
+                mark = ":o2:"
+            if pos in letras and board[letras.index(pos) - 1] == ":black_large_square:":
+                board[letras.index(pos) - 1] = mark
+                count += 1
+
+                #imprime o tabuleiro:
+                linha = ""
+                for i in range(len(board)):
+                    if i == 2 or i == 5 or i == 8:
+                        linha +=  " " + board[i]
+                        await x.send(linha)
+                        linha = ""
+                    else:
+                        linha += " " + board[i]
+                
+                checkVencedor(condVitoria, mark)
+                print(count)
+                if gameOver == True:
+                    await x.send(mark + " venceu!!")
+                if count >= 9:
+                    gameOver = True
+                    await x.send("É um empate")
+
+                #trocando turno
+                if turno == jogador1:
+                    turno = jogador2
+                elif turno == jogador2:
+                    turno = jogador1
+            else:
+                await x.send("Amigo para jogar use as letras q/ w/ e/ a/ s/ d/ z/ x/ c. Com elas vc poderá visualizar um tabuleiro de jogo da velha ;) ")
+
+        else:
+            await x.send("Não é sua vez amigo")
+    else:
+        await x.send("Comece um novo jogo usando $velhinha!!")
+
+def checkVencedor(condVitoria, mark):
+    global gameOver
+    for cond in condVitoria:
+        if board[cond[0]] == mark and board[cond[1]] == mark and board[cond[2]] == mark:
+            gameOver = True
+
+@velhinha.error
+async def velhinha_error(x, error):
+    print(error)
+    if isinstance(error, commands.MissingRequiredArgument):
+        await x.send("Onde está o outro jogador?? Você deve colocar o seu nome e o do jogador que deseja desafiar para esse duelo de djinns do jogo da velha :smile:")
+    elif isinstance(error, commands.BadArgument):
+        await x.send("Para desafiar e iniciar um jogo cite um jogador dessa maneira: (<@jogador>).")
+
+@jogar.error
+async def jogar_error(x, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await x.send("Ei amigo, insira a letra referente a posição que deseja jogar.")
+    elif isinstance(error, commands.BadArgument):
+        await x.send("Não se esqueça: As letras usadas nesse jogo são q/ w/ e/ a/ s/ d/ z/ x/ c.")
+
+
 client.run('tokenHere')
