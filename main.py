@@ -28,44 +28,68 @@ $ajuda para ver os comandos
 
 @client.command()
 async def ajuda(x):
-    await x.send('''==============$$COMANDOS$$==============
+    await x.send('''==============$$COMANDOS:computer:$$==============
 
-====================================
+============================================================
 
-$ajuda => abre essa aba aqui ;)
+$ajuda => abre essa aba aqui :wink:
 
-====================================
+============================================================
 
-$translate => o tradutor mais eficaz dos sete mares! Para traduzir uma palavra basta utilizar essa sintaxe:
+$translate => o tradutor mais eficaz dos sete mares :earth_africa:!! Para traduzir uma palavra basta utilizar essa sintaxe:
 
     $translate oceano en => ocean (para palavras)
 
     $translate "O mundo nos espera!" en => The world awaits us (para frases)
 
-====================================
+=============================================================
 
-$sort => para fazer sorteios rápidos para algum jogo ;P
+$sort => para fazer sorteios rápidos para algum jogo :stuck_out_tongue_winking_eye:
 
     ex: $sort 10 => algum número aleatório entre 1 e 10
 
-====================================
+=============================================================
 
-$super_flood => mete um numero se aloprar na potenciação
+$super_flood => mete um numero se aloprar na potenciação :persevere:
 
     ex: $super_flood 2 100 => um mega numero imprimido
 
-==================================== 
+=============================================================
+
+$velhinha => jogo da velha entre os djinns mais inteligentes do server :older_woman:
+
+    ex: $velhinha @jogador1 @jogador2
+
+=============================================================
+
+$calcula => Uma calculadorinha simples, mas bastante eficaz!! Para fazer operações utilize:
+
+    ex: $calcula 2 + 3
+
+    símbolos para realizar as operações presentes na calculadora:
+
+    "+" -> adição
+    "-" -> subtração
+    "x" -> multiplicação
+    "p" -> potenciação
+    "/" -> divisão
+    "r" -> radiciação
+
+==============================================================
     ''')
 
+#função ola
 @client.command()
 async def ola(x):
     await x.send(f'Olá, {x.author}')
 
+#função sorteio
 @client.command()
 async def sort(x, numero):
     sorteio = random.randint(1, int(numero))
     await x.send(f'O número sorteado foi: {sorteio}')
 
+#função super_flood
 @client.command()
 async def super_flood(x, i, j):
     s = int(i) ** int(j)
@@ -79,6 +103,7 @@ async def translate(x, palavra, lingua):
     time.sleep(2)
     await x.send(f"{trad}")
 
+#função adivinha
 @client.command()
 async def adivinha(x, numero: int):
     """Adivinhe o numero de 1 a 6"""
@@ -88,8 +113,55 @@ async def adivinha(x, numero: int):
     else:
         await x.send("Errou")
 
-#jogo da velha para o bot
+#função calculadora
+@client.command()
+async def calcula(x, number1: float, operador, number2: float):
+  
+  operador = operador.lower()
 
+  await x.send('''Uma calculadorinha simples, mas bastante eficaz!!
+  
+  Para fazer operações utilize:
+  
+    ex: $calcula 2 + 3 
+    
+    resultado esperado: 5.
+    
+  funções presentes nessa calculadora para realizar:
+  
+  - "+" - adição
+  - "x" - multiplicação
+  - "-" - subtração
+  - "/" - divisão
+  - "p" - potenciação
+  - "r" - radiciação''')
+
+  if operador == "adição" or operador == "+":
+    await x.send("Ta aqui a soma meu chapa.")
+    resultado = number1 + number2
+    await x.send(f"O resultado é: {resultado}")
+  elif operador == "subtração" or operador == "-":
+    await x.send("Tá aqui a subtração meu chapa.")
+    resultado = number1 - number2
+    await x.send(f"O resultado é: {resultado}")
+  elif operador == "multiplicação" or operador == "x":
+    await x.send("Tá aqui a multiplicação meu chapa.")
+    resultado = number1 * number2
+    await x.send(f"O resultado é: {resultado}")
+  elif operador == "potenciação" or operador == "p":
+    await x.send("Tá aqui a potenciação meu chapa.")
+    resultado = number1 ** number2
+    await x.send(f"O resultado é: {resultado}")
+  elif operador == "raiz quadrada" or operador == "r":
+    await x.send("Tá aqui a sua raiz meu chapa.")
+    resultado = number2 ** (1/number1)
+    await x.send(f"O resultado é: {resultado:.2f}")
+  elif operador == "raiz quadrada" or operador == "r":
+    await x.send("Tá aqui a sua divisão meu chapa.")
+    resultado = number1 / number2
+    await x.send(f"O resultado é: {resultado}")
+
+#jogo da velha para o bot
 jogador1 = ""
 jogador2 = ""
 turno = ""
