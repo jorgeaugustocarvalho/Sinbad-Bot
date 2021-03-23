@@ -156,7 +156,7 @@ async def calcula(x, number1: float, operador, number2: float):
     await x.send("Tá aqui a sua raiz meu chapa.")
     resultado = number2 ** (1/number1)
     await x.send(f"O resultado é: {resultado:.2f}")
-  elif operador == "raiz quadrada" or operador == "r":
+  elif operador == "divisão" or operador == "/":
     await x.send("Tá aqui a sua divisão meu chapa.")
     resultado = number1 / number2
     await x.send(f"O resultado é: {resultado}")
